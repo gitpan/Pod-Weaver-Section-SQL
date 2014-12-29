@@ -3,6 +3,10 @@ package Pod::Weaver::Section::SQL;
 # ABSTRACT: Document SQL more easily by referencing only the SQL command in POD
 
 
+use feature 'state';
+
+use List::Util qw/any/;
+
 use Moose;
 with 'Pod::Weaver::Role::Section';
 with 'Pod::Weaver::Role::Transformer';
@@ -12,6 +16,8 @@ use Moose::Autobox;
 use Pod::Elemental::Selectors -all;
 use Pod::Elemental::Transformer::Nester;
 use Pod::Elemental::Transformer::Gatherer;
+
+use SQL::Statement;
 
 has __used_container => ( is => 'rw' );
 
@@ -77,11 +83,11 @@ sub transform_document {
             if ( $node->can('children') ) {
 
                 # Move up every child of sql node
-                push @queue, @{ $node->children };
+                unshift @queue, @{ $node->children };
             }
             push @{ $container->children },
               Pod::Elemental::Element::Generic::Text->new(
-                content => _format_sql( $node->content . "\n\n" ) );
+                content => $self->_format_sql( $node->content . "\n\n" ) );
         }
         else {
             push @{ $container->children }, $node;
@@ -114,10 +120,49 @@ sub weave_section {
     $document->children->push(@to_add);
 }
 
+has keywords => (
+  is      => 'ro',
+  lazy    => 1,
+  default => sub {
+      my $parser = SQL::Parser->new( ANSI =>
+        {
+          RaiseError => 1,
+          PrintError => 1
+        }
+      );
+      my $stmt = SQL::Statement->new(
+        'SELECT * FROM some_unknown_table',
+        $parser
+      );
+
+      my @keywords = (
+        keys %{$stmt->{opts}->{function_names}},
+        keys %{$stmt->{opts}->{reserved_words}},
+        keys %{$stmt->{opts}->{valid_commands}},
+        keys %{$stmt->{opts}->{valid_comparison_operators}},
+        keys %{$stmt->{opts}->{valid_data_types}}
+      );
+      return \@keywords;
+    },
+);
+
 sub _format_sql {
-    my ($content) = @_;
-    $content =~ s/SELECT/B<SELECT>/g;
-    $content =~ s/FROM/B<FROM>/g;
+    my ($self, $content) = @_;
+
+    my %words;
+    map { $words{$_} = 1 } split ' ', $content;
+
+    for my $word ( keys %words ) {
+        if ( any { $word eq $_ } @{ $self->keywords } ) {
+            my $new_word = $word;
+            $new_word =~ s/</E\[==?:==lt==:?==\]/;
+            $new_word =~ s/>/E\[==?:==gt==:?==\]/;
+            $content =~ s/$word/B\[==?:==$new_word==:?==\]/g;
+        }
+    }
+
+    $content =~ s/\[==\?:==/</g;
+    $content =~ s/==:\?==\]/>/g;
     return $content;
 }
 
@@ -135,7 +180,7 @@ Pod::Weaver::Section::SQL - Document SQL more easily by referencing only the SQL
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 SYNOPSIS
 

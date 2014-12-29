@@ -21,13 +21,16 @@ my %WriteMakefileArgs = (
   "LICENSE" => "gpl",
   "NAME" => "Pod::Weaver::Section::SQL",
   "PREREQ_PM" => {
+    "List::Util" => 0,
     "Moose" => 0,
     "Moose::Autobox" => 0,
     "Pod::Elemental::Selectors" => 0,
     "Pod::Elemental::Transformer::Gatherer" => 0,
     "Pod::Elemental::Transformer::Nester" => 0,
     "Pod::Weaver::Role::Section" => 0,
-    "Pod::Weaver::Role::Transformer" => 0
+    "Pod::Weaver::Role::Transformer" => 0,
+    "SQL::Statement" => 0,
+    "feature" => 0
   },
   "TEST_REQUIRES" => {
     "PPI" => 0,
@@ -38,7 +41,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.01",
+  "VERSION" => "0.02",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -46,6 +49,7 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "List::Util" => 0,
   "Moose" => 0,
   "Moose::Autobox" => 0,
   "PPI" => 0,
@@ -55,9 +59,11 @@ my %FallbackPrereqs = (
   "Pod::Weaver" => 0,
   "Pod::Weaver::Role::Section" => 0,
   "Pod::Weaver::Role::Transformer" => 0,
+  "SQL::Statement" => 0,
   "Software::License::Artistic_1_0" => 0,
   "Test::Differences" => 0,
   "Test::More" => 0,
+  "feature" => 0,
   "strict" => 0,
   "warnings" => 0
 );

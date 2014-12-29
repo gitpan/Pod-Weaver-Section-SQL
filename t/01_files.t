@@ -18,7 +18,7 @@ use Pod::Weaver;
 #
 # my @tests = qw/none/;
 # my @tests = qw/multi_select/;
-my @tests = qw/none methods select multi_select select_content/;
+my @tests = qw/none methods select multi_select select_content multi_select_content where where_date where_double delete drop/;
 
 my $perl_doc = do { local $/; <DATA>; };
 
