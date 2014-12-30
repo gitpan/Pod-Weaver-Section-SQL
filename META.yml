@@ -29,5 +29,4 @@ requires:
   Pod::Weaver::Role::Section: 0
   Pod::Weaver::Role::Transformer: 0
   SQL::Statement: 0
-  feature: 0
-version: 0.02
+version: 0.0201

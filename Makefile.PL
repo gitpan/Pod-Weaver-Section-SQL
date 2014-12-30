@@ -29,8 +29,7 @@ my %WriteMakefileArgs = (
     "Pod::Elemental::Transformer::Nester" => 0,
     "Pod::Weaver::Role::Section" => 0,
     "Pod::Weaver::Role::Transformer" => 0,
-    "SQL::Statement" => 0,
-    "feature" => 0
+    "SQL::Statement" => 0
   },
   "TEST_REQUIRES" => {
     "PPI" => 0,
@@ -41,7 +40,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.02",
+  "VERSION" => "0.0201",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -63,7 +62,6 @@ my %FallbackPrereqs = (
   "Software::License::Artistic_1_0" => 0,
   "Test::Differences" => 0,
   "Test::More" => 0,
-  "feature" => 0,
   "strict" => 0,
   "warnings" => 0
 );

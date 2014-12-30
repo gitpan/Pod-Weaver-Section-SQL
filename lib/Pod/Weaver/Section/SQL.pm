@@ -3,8 +3,6 @@ package Pod::Weaver::Section::SQL;
 # ABSTRACT: Document SQL more easily by referencing only the SQL command in POD
 
 
-use feature 'state';
-
 use List::Util qw/any/;
 
 use Moose;
@@ -155,14 +153,14 @@ sub _format_sql {
     for my $word ( keys %words ) {
         if ( any { $word eq $_ } @{ $self->keywords } ) {
             my $new_word = $word;
-            $new_word =~ s/</E\[==?:==lt==:?==\]/;
-            $new_word =~ s/>/E\[==?:==gt==:?==\]/;
-            $content =~ s/$word/B\[==?:==$new_word==:?==\]/g;
+            $new_word =~ s/</E\[__?:__lt__:?__\]/;
+            $new_word =~ s/>/E\[__?:__gt__:?__\]/;
+            $content =~ s/$word/B\[__?:__${new_word}__:?__\]/g;
         }
     }
 
-    $content =~ s/\[==\?:==/</g;
-    $content =~ s/==:\?==\]/>/g;
+    $content =~ s/\[__\?:__/</g;
+    $content =~ s/__:\?__\]/>/g;
     return $content;
 }
 
@@ -180,7 +178,7 @@ Pod::Weaver::Section::SQL - Document SQL more easily by referencing only the SQL
 
 =head1 VERSION
 
-version 0.02
+version 0.0201
 
 =head1 SYNOPSIS
 
